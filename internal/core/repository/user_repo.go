@@ -15,7 +15,7 @@ type UserRespository interface {
 	FindUserByEmail(string) (*models.User, error)
 	FindUserByID(int) (*models.User, error)
 	CreateUser(*models.User) error
-	UpdateUser(*models.User) error
+	// UpdateUser(*models.User) error
 }
 
 func NewUserRepository(db *gorm.DB) *UserStorage {
@@ -51,10 +51,10 @@ func (repo *UserStorage) FindUserByID(userID int) (*models.User, error) {
 	return repo.FindUser("id", userID)
 }
 
-func (repo *UserStorage) UpdateUser(user *models.User) error {
-	if err := repo.DB.Save(user).Error; err != nil {
-		return errors.New("failed to update user:" + err.Error())
-	}
+// func (repo *UserStorage) UpdateUser(user *models.User) error {
+// 	if err := repo.DB.Save(user).Error; err != nil {
+// 		return errors.New("failed to update user:" + err.Error())
+// 	}
 
-	return nil
-}
+// 	return nil
+// }

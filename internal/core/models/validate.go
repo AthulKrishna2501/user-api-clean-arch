@@ -41,6 +41,9 @@ func ValidateEmail(email string) error {
 
 func ValidatePhoneNumber(phoneNumber string) error {
 	phoneRegex := `^\+?[1-9]\d{1,14}$`
+	if len(phoneNumber) != 10 {
+		return fmt.Errorf(ErrInvalidPhoneNumber)
+	}
 	matched, err := regexp.MatchString(phoneRegex, phoneNumber)
 	if err != nil {
 		return errors.New("error while validating phone number")
@@ -56,15 +59,15 @@ func ValidatePassword(password string) error {
 		return fmt.Errorf(ErrPasswordLength, MinPasswordLength, MaxPasswordLength)
 	}
 
-	complexityRegex := `^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$`
-	matched, err := regexp.MatchString(complexityRegex, password)
-	if err != nil {
-		return errors.New("error while validating password complexity")
-	}
+	// complexityRegex := `^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$`
+	// matched, err := regexp.MatchString(complexityRegex, password)
+	// if err != nil {
+	// 	return errors.New("error while validating password complexity")
+	// }
 
-	if !matched {
-		return errors.New(ErrPasswordComplexity)
-	}
+	// if !matched {
+	// 	return errors.New(ErrPasswordComplexity)
+	// }
 
 	return nil
 }

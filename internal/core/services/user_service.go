@@ -25,7 +25,12 @@ func NewUserService(userRepo repository.UserRespository) *UserServiceImpl {
 func (s *UserServiceImpl) SignUp(user *models.SignupInput) error {
 	exists, _ := s.userRepo.FindUserByEmail(user.Email)
 	if exists != nil {
-		return errors.New(models.ErrUserAlreadyExists)
+		return models.ErrUserAlreadyExists
+	}
+
+	if err := models.ValidateSignup(*user); err != nil {
+		return errors.New(err.Error())
+
 	}
 
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
@@ -49,12 +54,13 @@ func (s *UserServiceImpl) SignUp(user *models.SignupInput) error {
 func (s *UserServiceImpl) Login(email, password string) (*models.User, error) {
 	user, err := s.userRepo.FindUserByEmail(email)
 	if err != nil {
-		return nil, errors.New(models.ErrUserDoesNotExist)
+		return nil, models.ErrUserDoesNotExist
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
 		return nil, errors.New("invalid password")
 	}
+	user.Password = ""
 
 	return user, nil
 

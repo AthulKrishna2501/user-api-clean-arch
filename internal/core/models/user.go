@@ -1,14 +1,19 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+)
 
 type User struct {
-	gorm.Model
-	UserName    string `gorm:"column:user_name;not null"`
-	Email       string `gorm:"column:email;not null"`
-	Password    string `gorm:"column:password;not null" json:"-"`
-	PhoneNumber string `gorm:"column:phonenumber;not null"`
-	Status      string `gorm:"check(status IN('Active', 'Inactive', 'Blocked'))"`
+	ID          int        `json:"id"`
+	UserName    string     `json:"user_name"`
+	Email       string     `json:"email"`
+	Password    string     `json:"password"`
+	PhoneNumber string     `json:"phone_number"`
+	Status      string     `json:"status"`
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
 
 type TempUser struct {

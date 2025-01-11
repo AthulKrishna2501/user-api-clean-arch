@@ -14,37 +14,35 @@ import (
 )
 
 func main() {
-	gin := gin.Default()
+	Gin := gin.Default()
 
 	log := logger.NewLogrusLogger()
 
 	configEnv := config.ConfigEnv()
-	fmt.Println("config env ", configEnv)
+	fmt.Println("config env", configEnv)
 
 	db := database.ConnectDatabase(*configEnv)
-
 	if db == nil {
 		log.Error("Failed to connect to database")
 		return
 	}
 
 	userRepo := repository.NewUserRepository(db)
-
 	userService := services.NewUserService(userRepo)
 
-	userController := controllers.NewUserController(userService)
+	tokenGenerator := &utils.RealTokenGenerator{}
 
-	api := gin.Group("/api/v1/users")
+	userController := controllers.NewUserController(userService, tokenGenerator)
+
+	api := Gin.Group("/api/v1/users")
 	{
-
 		api.POST("/signup", userController.SignUp)
 		api.POST("/login", userController.Login)
-		api.GET("/profile", utils.AuthMiddleware("user"), userController.GetProfile)
+		api.GET("/profile", utils.AuthMiddleware("user", tokenGenerator), userController.GetProfile)
 	}
 
-	err := gin.Run(":8080")
+	err := Gin.Run(":8080")
 	if err != nil {
 		log.Error("Failed to start server", err)
 	}
-
 }

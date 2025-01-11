@@ -8,9 +8,23 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"github.com/stretchr/testify/mock"
 )
 
 var Secret = []byte("your-secret-key")
+
+type MockTokenGenerator struct {
+	mock.Mock
+}
+
+func (m *MockTokenGenerator) CreateToken(id int, email, role string) (string, error) {
+	args := m.Called(id, email, role)
+	return args.String(0), args.Error(1)
+}
+
+type TokenGenerator interface {
+	CreateToken(id int, email, role string) (string, error)
+}
 
 type Claims struct {
 	ID    int    `json:"id"`
@@ -19,10 +33,13 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-func CreateToken(id int, email, role string) (string, error) {
+type RealTokenGenerator struct{}
+
+func (r *RealTokenGenerator) CreateToken(id int, email, role string) (string, error) {
 	claims := Claims{
 		ID:    id,
 		Email: email,
+		Role:  role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
 			IssuedAt:  time.Now().Unix(),
@@ -33,7 +50,7 @@ func CreateToken(id int, email, role string) (string, error) {
 	return token.SignedString(Secret)
 }
 
-func AuthMiddleware(requiredRole string) gin.HandlerFunc {
+func AuthMiddleware(requiredRole string, tokenGenerator TokenGenerator) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {

@@ -2,14 +2,15 @@ package models
 
 import "errors"
 
-var ErrInvalidInput = errors.New("invalid input")
+var (
+	ErrUserAlreadyExists = errors.New("User already exists")
+	ErrInvalidInput      = errors.New("Invalid input")
+	ErrUserBlocked       = errors.New("User is blocked")
+	ErrInvalidID         = errors.New("Invalid ID")
+	ErrUserDoesNotExist  = errors.New("user does not exists")
+)
 
 const (
-	ErrUserAlreadyExists = "User already exists"
-	ErrUserDoesNotExist  = "User does not exist"
-	ErrUserBlocked       = "User is blocked"
-	ErrInvalidID         = "Unauthorized or invalid user ID"
-
 	MsgLoginSuccessful           = "Login successful"
 	MsgLogoutSuccessful          = "Logout successful"
 	MsgSignupSuccessful          = "User signed up successfully!"
