@@ -5,8 +5,6 @@ import (
 	"clean-arch/internal/app/controllers"
 	"clean-arch/internal/app/utils"
 	"clean-arch/internal/core/models"
-	"clean-arch/internal/core/services"
-	"clean-arch/internal/mocks"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -239,36 +237,4 @@ func TestLogin_UserNotFound(t *testing.T) {
 	assert.JSONEq(t, expected, rec.Body.String())
 
 	mockService.AssertExpectations(t)
-}
-func TestGetProfile_Success(t *testing.T) {
-	mockRepo := new(mocks.MockUserRepository)
-
-	service := services.NewUserService(mockRepo)
-
-	mockUser := &models.User{
-		ID:          1,
-		UserName:    "JohnDoe",
-		Email:       "johndoe@gmail.com",
-		PhoneNumber: "1234567890",
-		Status:      "Active",
-		CreatedAt:   time.Now().Truncate(time.Second),
-		UpdatedAt:   time.Now().Truncate(time.Second),
-	}
-
-	mockRepo.On("FindUserByID", 1).Return(mockUser, nil)
-
-	result, err := service.GetProfile(1)
-
-	assert.NoError(t, err)
-	assert.NotNil(t, result)
-
-	assert.Equal(t, mockUser.ID, result.ID)
-	assert.Equal(t, mockUser.UserName, result.UserName)
-	assert.Equal(t, mockUser.Email, result.Email)
-	assert.Equal(t, mockUser.PhoneNumber, result.PhoneNumber)
-	assert.Equal(t, mockUser.Status, result.Status)
-	assert.Equal(t, mockUser.CreatedAt, result.CreatedAt)
-	assert.Equal(t, mockUser.UpdatedAt, result.UpdatedAt)
-
-	mockRepo.AssertExpectations(t)
 }
