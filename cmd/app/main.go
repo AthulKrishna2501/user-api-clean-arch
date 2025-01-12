@@ -41,7 +41,7 @@ func main() {
 		api.GET("/profile", utils.AuthMiddleware("user", tokenGenerator), userController.GetProfile)
 	}
 
-	err := Gin.Run(":8080")
+	err := Gin.Run(":3000")
 	if err != nil {
 		log.Error("Failed to start server", err)
 	}

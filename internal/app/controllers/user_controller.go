@@ -13,13 +13,13 @@ import (
 
 type UserController struct {
 	userService    services.UserService
-	tokenGenerator utils.TokenGenerator 
+	tokenGenerator utils.TokenGenerator
 }
 
 func NewUserController(userService services.UserService, tokenGenerator utils.TokenGenerator) *UserController {
 	return &UserController{
 		userService:    userService,
-		tokenGenerator: tokenGenerator, 
+		tokenGenerator: tokenGenerator,
 	}
 }
 
@@ -70,7 +70,6 @@ func (c *UserController) Login(ctx *gin.Context) {
 		return
 	}
 
-	
 	token, err := c.tokenGenerator.CreateToken(int(user.ID), input.Email, "user")
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
