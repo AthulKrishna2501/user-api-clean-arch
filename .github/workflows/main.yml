@@ -35,6 +35,13 @@ jobs:
           EC2_IP: ${{ secrets.EC2_IP }}
         run: |
           ssh -i site.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_IP '
+            # Install Go
+            sudo apt update
+            sudo apt install -y golang-go
+
+            # Verify Go installation
+            go version
+            
             cd /home/ubuntu/user-api-clean-arch
             go mod tidy
             go test ./internal/controllers -v
