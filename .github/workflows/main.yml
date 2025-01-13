@@ -47,11 +47,11 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_IP: ${{ secrets.EC2_IP }}
         run: |
-          ssh -i key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_IP '
+          ssh -i site.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_IP '
             sudo systemctl restart thefurnishstore.service
           '
 
       # Step 5: Cleanup SSH Key
       - name: Cleanup
         run: |
-          rm -f key.pem
+          rm -f site.pem
