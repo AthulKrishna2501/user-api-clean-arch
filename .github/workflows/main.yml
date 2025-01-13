@@ -24,7 +24,7 @@ jobs:
           EC2_IP: ${{ secrets.EC2_IP }}
         run: |
           ssh -i site.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_IP
-            cd ~/UserManagementBackend
+            cd ~/user-api-clean-arch
             git pull origin main
           '
 
